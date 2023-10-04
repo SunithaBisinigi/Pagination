@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 const data = [{
     ID: 1,
     CompanyName: 'Super Mart of the West',
@@ -122,8 +124,24 @@ const data = [{
   
   
 const Pagination = ()=> {
-  const pageNumbers=[];
-  for (let i=1; i<data.length+1; i++) pageNumbers.push(i);
+  var records=4
+  const [page, setPage] = useState(0);
+  const [pages, setPages] = useState(1);
+  const [pageNumber, setPageNumber] = useState(1);
+  function handlePrevious(){
+    if (pageNumber>1){
+      setPageNumber(pageNumber-1);
+      setPage(page-records);
+      setPages(pages-1)
+    }
+  }
+  function handleNext(){
+    if (pageNumber<data.length/records){
+      setPage(page+records)
+      setPageNumber(pageNumber+1);
+      setPages(pages+1)
+    }
+  }
     return (
         <>
             <table id="table">
@@ -136,10 +154,10 @@ const Pagination = ()=> {
                         <td>{company.CompanyName}</td>
                         <td>{company.State}</td>
                     </tr>
-                    )).slice(0,3)
+                    )).slice(page,page+records)
                 }
             </table>
-            <pre><button id="previous">Previous</button> rows of page:3  {2}-{data.length/3} of {data.length/3}  <button id="next">Next</button> </pre>
+            <pre><button id="previous" onClick={handlePrevious}>Previous</button> rows of page:{records}  {pageNumber}-{data.length/records} of {data.length/records}  <button id="next" onClick={handleNext}>Next</button> </pre>
         </>
     )
 }
